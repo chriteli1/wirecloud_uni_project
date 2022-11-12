@@ -1,0 +1,95 @@
+body {
+    background-color: white;
+}
+
+#alerts {
+    position: absolute;
+    top: 0px;
+    left: 0px;
+    background-color: #eeeeee;
+    color: black;
+    font-family: Courier;
+    font-size: calc(10px + 1.5vw);
+    list-style: none;
+    padding-left: 0px;
+    margin-top: 0px;
+    margin-left: 3px;
+    height: auto;
+    min-height: 99%;
+    width: 99%;
+    border-color: #9B9B9B;
+    border-width: 3px;
+    border-style: solid;
+    display: flex;
+    flex-direction: column-reverse;
+    
+}
+
+.submenu {
+    list-style: none;
+    flex-direction: column-reverse;
+}
+
+#alerts > * {
+    width: auto;
+    padding: 5%;
+    margin: 7px;
+    border-color: #9B9B9B;
+    border-width: 3px;
+    border-style: solid;
+    border-radius: 8px;
+    box-shadow: 5px 10px rgb(0 0 0 / 0.2);
+}
+
+#wrapper {
+    display: flex;
+    justify-content: center;
+}
+
+p {
+    
+    color: black;
+    z-index: 10;
+    font-family: Courier;
+    /* top: 40%;
+    left: 35%; */
+    font-size: calc(25px + 1.5vw);
+
+}
+
+
+/*hide the inputs/checkmarks and submenu*/
+input, ul.submenu {
+    display: none;
+}
+
+/*position the label*/
+label {
+    position: relative;
+    display: block;
+    cursor: pointer;
+}
+
+/*show the submenu when input is checked*/
+input:checked~ul.submenu {
+    display: flex;
+}
+
+input:checked~label::after {
+    content: '\01F893';
+    position: absolute;
+    /* padding-right: 1em; */
+    top: 0em;
+    /* right: -0.6em; */
+    right: 18.3em;
+}
+
+label::after {
+    position: absolute;
+    display: inline-block;
+    content: '\01F892';
+    padding-left: 0.2em;
+    font-size: 1.5em;
+    /* padding-bottom: 2em; */
+    top: -0.4em;
+}

@@ -1,0 +1,29 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="alerts-widget" version="4.2">
+    <details>
+        <title>Alerts</title>
+        <email>wirecloud@conwet.com</email>
+        <image>img/alert.png</image>
+        <description>Alert the user when orion sends a notification</description>
+        <!-- <longdescription>DESCRIPTION.md</longdescription> -->
+        <authors>Telis</authors>
+        <homepage>https://github.com/wirecloud-fiware/ngsi-browser-widget</homepage>
+        <license>Apache License 2.0</license>
+        <licenseurl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseurl>
+        <!--<doc>doc/userguide.md</doc>
+        <changelog>doc/changelog.md</changelog>-->
+        <issuetracker>https://github.com/wirecloud-fiware/ngsi-browser-widget/issues</issuetracker>
+    </details>
+
+    <preferences>
+		<preference name="Proxy_url" type="text" label="Proxy IP" description="The IP of the proxy that gets notifications" default=""/>
+	</preferences>
+
+    <!-- <wiring>
+        <inputendpoint name="POIselected" label="Map output info" type="text" friendcode="map-output" />
+    </wiring> -->
+
+
+    <contents src="index.html" useplatformstyle="false"/>
+    <rendering height="100%" width="33%"/>
+</widget>
