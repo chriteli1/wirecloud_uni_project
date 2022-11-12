@@ -1,18 +1,18 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="alerts-widget" version="4.2">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="alerts-widget" version="4.4">
     <details>
         <title>Alerts</title>
-        <email>wirecloud@conwet.com</email>
+        <email>christelioglanidis@outlook.com</email>
         <image>img/alert.png</image>
         <description>Alert the user when orion sends a notification</description>
         <!-- <longdescription>DESCRIPTION.md</longdescription> -->
         <authors>Telis</authors>
-        <homepage>https://github.com/wirecloud-fiware/ngsi-browser-widget</homepage>
-        <license>Apache License 2.0</license>
-        <licenseurl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseurl>
-        <!--<doc>doc/userguide.md</doc>
-        <changelog>doc/changelog.md</changelog>-->
-        <issuetracker>https://github.com/wirecloud-fiware/ngsi-browser-widget/issues</issuetracker>
+        <homepage>https://github.com/chriteli1/wirecloud_uni_project/tree/main/custom_resources/alerts-widget</homepage>
+        <!-- <license>Apache License 2.0</license> -->
+        <!-- <licenseurl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseurl> -->
+        <doc>doc/userguide.md</doc>
+        <changelog>doc/changelog.md</changelog>
+        <issuetracker>https://github.com/chriteli1/wirecloud_uni_project/issues</issuetracker>
     </details>
 
     <preferences>
