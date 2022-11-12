@@ -1,0 +1,31 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-graph-general" version="2.3">
+    <details>
+        <title>Graph for Comet data</title>
+        <email>christelioglanidis@outlook.com</email>
+        <image>img/lineChart.png</image>
+        <description>Plot data(PM1,PM10,PM2.5) from STH Comet</description>
+        <longdescription>DESCRIPTION.md</longdescription>
+        <authors>Telis</authors>
+        <homepage>https://github.com/chriteli1/wirecloud_uni_project/tree/main/custom_resources/sth-data-graph</homepage>
+        <license>Apache License 2.0</license>
+        <licenseurl>http://www.apache.org/licenses/LICENSE-2.0.html</licenseurl>
+        <doc>doc/userguide.md</doc>
+        <changelog>doc/changelog.md</changelog>
+        <issuetracker>https://github.com/chriteli1/wirecloud_uni_project/issues</issuetracker>
+    </details>
+
+    <preferences>
+        <preference name="units" type="list" label="Units" description="Choose what units you want to plot" default="pm">
+            <option value="pm" label="PM1, PM2.5, PM10"/>
+            <option value="rh_t" label="RH and Temperature"/>
+        </preference>
+    </preferences>
+    
+    <wiring>
+        <inputendpoint name="POIselected" label="Map output info" type="text" friendcode="poi" />
+    </wiring>
+
+    <contents src="lineChart.html" useplatformstyle="true"/>
+    <rendering height="100%" width="90%"/>
+</widget>
