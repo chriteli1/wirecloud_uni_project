@@ -5,8 +5,8 @@ window.onload = (event) => {
   };
 
 function loadData() {
-    var url = MashupPlatform.prefs.get('Proxy_url');
-    // var url = "http://localhost:5000/notifications";
+    // var url = MashupPlatform.prefs.get('Proxy_url');
+    var url = "http://localhost:5000/notifications";
     var i = 0;
     var is_empty = true;
     var connection_established = false;
@@ -83,8 +83,8 @@ function loadData() {
         if(!connection_established){
             if(connection_tries>6){
                 alerts_source.close();
-                // console.log("Connection to proxy server lost, try again later.");
-                MashupPlatform.widget.log("Connection to proxy server lost, try again later.", MashupPlatform.log.ERROR);
+                console.log("Connection to proxy server lost, try again later.");
+                // MashupPlatform.widget.log("Connection to proxy server lost, try again later.", MashupPlatform.log.ERROR);
             }
             else connection_tries++;
         }

@@ -75,21 +75,3 @@ input:checked~ul.submenu {
     display: flex;
 }
 
-input:checked~label::after {
-    content: '\01F893';
-    position: absolute;
-    /* padding-right: 1em; */
-    top: 0em;
-    /* right: -0.6em; */
-    right: 18.3em;
-}
-
-label::after {
-    position: absolute;
-    display: inline-block;
-    content: '\01F892';
-    padding-left: 0.2em;
-    font-size: 1.5em;
-    /* padding-bottom: 2em; */
-    top: -0.4em;
-}
