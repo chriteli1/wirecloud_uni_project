@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="alerts-widget" version="4.0">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="alerts-widget" version="4.1">
     <details>
         <title>Alerts</title>
         <email>christelioglanidis@outlook.com</email>

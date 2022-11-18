@@ -42,36 +42,15 @@ body {
 }
 
 #wrapper {
+    margin-top: 10%;
     display: flex;
     justify-content: center;
 }
 
 p {
-    
     color: black;
     z-index: 10;
     font-family: Courier;
-    /* top: 40%;
-    left: 35%; */
     font-size: calc(25px + 1.5vw);
-
-}
-
-
-/*hide the inputs/checkmarks and submenu*/
-input, ul.submenu {
-    display: none;
-}
-
-/*position the label*/
-label {
-    position: relative;
-    display: block;
-    cursor: pointer;
-}
-
-/*show the submenu when input is checked*/
-input:checked~ul.submenu {
-    display: flex;
 }
 
