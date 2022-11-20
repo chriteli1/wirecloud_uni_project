@@ -11,23 +11,28 @@ app = Flask(__name__)
 CORS(app)
 
 post_flag = False
-alerts = ""
+alerts = []
+alerts_index = 1
 @app.route('/notifications', methods=['POST', 'GET'])
 def receive_notification():
-    global alerts
+    global alerts, alerts_index
     if request.method == 'POST':
         notification = request.json
-        alerts = notification["data"]
-        print(alerts)
+        # print(notification)
+        alerts.extend(notification["data"])
+        # alerts_index += 1
+        # print(type(alerts))
+        # print(alerts)
         return notification 
     if request.method == 'GET':
         alerts_data = "data: " + str(alerts) + "\n\n"
-        # print(alerts_data)
+        print(alerts_data)
         resp = make_response(alerts_data)
         h = resp.headers
         h["Content-Type"] = "text/event-stream"
         # h["Access-Control-Allow-Origin"] = "*"
-        alerts = ""
+        alerts = []
+        # alerts_index = 1
         return resp
     
 
