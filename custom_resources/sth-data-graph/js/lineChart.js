@@ -17,10 +17,13 @@
 	// 	handlerEntityIdInput(graph_input);
 	//   };
 	/*=======================================================*/
-
+	
 	//Find the id of the selected entity
 	var handlerEntityIdInput = function handlerEntityIdInput(graph_input) {
-		if (graph_input != null && graph_input.id != null && !document.hidden){
+		// console.log("Hidden: ", document.visibilityState);
+		
+		if (graph_input != null && graph_input.id != null && document.hasFocus()){
+			// console.log("not hidden");
 			if(!pause_flag){
 				var entityId = graph_input.id;
 				g_entityId = entityId;
