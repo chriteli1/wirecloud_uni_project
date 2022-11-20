@@ -54,3 +54,7 @@ p {
     font-size: calc(25px + 1.5vw);
 }
 
+summary {
+    transition: all 0.5s ;
+    cursor: pointer;
+}
