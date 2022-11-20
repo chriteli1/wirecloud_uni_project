@@ -21,7 +21,7 @@ body {
     border-width: 3px;
     border-style: solid;
     display: flex;
-    flex-direction: column-reverse;
+    flex-direction: column;
     
 }
 
