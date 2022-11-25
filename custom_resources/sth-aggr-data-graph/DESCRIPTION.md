@@ -1,0 +1,1 @@
+This is a widget for plotting aggregated STH Comet data.
