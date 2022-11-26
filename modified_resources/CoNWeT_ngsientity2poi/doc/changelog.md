@@ -1,3 +1,9 @@
+## 3.1.3 (Chris Telioglanidis, 26-11-2022)
+
+- If entity type is "room" use house icon.
+- Disable updateMarkerIcon function.
+
+
 ## 3.1.2 (2018-05-05)
 
 - Fix some problems managing entity coordinates.

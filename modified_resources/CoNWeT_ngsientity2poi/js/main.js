@@ -89,6 +89,12 @@ var entity2poi, processData, processEntity;
     };
 
     entity2poi = function entity2poi(entity, coordinates, geojson) {
+		// console.log(entity.id, entity.type, typeof entity.type);
+		if (entity.type == "room"){
+			icon = internalUrl('images/house.png');
+		}else{
+			icon = internalUrl('images/icon.png');
+		}
         var poi = {
             id: entity.id,
             icon: icon,
@@ -151,11 +157,11 @@ var entity2poi, processData, processEntity;
      * this if is required for testing, but we have to search a cleaner way
      */
     if (window.MashupPlatform != null) {
-        MashupPlatform.prefs.registerCallback(updateMarkerIcon);
+        //MashupPlatform.prefs.registerCallback(updateMarkerIcon);
         MashupPlatform.wiring.registerCallback("entityInput", processData);
 
         // Init initial marker icon
-        updateMarkerIcon();
+        //updateMarkerIcon();
     }
 
 })();
