@@ -1,0 +1,1 @@
+This directory contains new versions of resources from the community that needed to change in order to work. 
