@@ -3,13 +3,13 @@
 	
 	var g_entityId;//global entity id
 	var pause_flag = false;
-	console.log("Start");
+	// console.log("Start");
 	document.getElementById("pause").addEventListener("click", Pause_Live);
 	
 	function Pause_Live(){
 		pause_flag = !pause_flag;
 		document.getElementById("pause").innerHTML = pause_flag ? "Go Live" : "Pause Feed";
-		console.log("pause inside function: ", pause_flag);
+		// console.log("pause inside function: ", pause_flag);
 	}
 
 	var title = document.getElementById("entityId"); // This is needed to check if widget is visible atm
@@ -57,7 +57,7 @@
 
 	function loadData(callback) {
 
-		console.log("ID:", g_entityId);
+		// console.log("ID:", g_entityId);
 		var loadLocalData = false,     //change this if you want to perform a request to a real instance of sth-comet
 		//change the urlParams and headers if you want to query your own entity data.
 			urlParams = {
@@ -148,7 +148,7 @@
 				data = data1 + data2 + data3 + data4 + data5;
 				data = data.replace(/'/g, '"');
 				json_data = JSON.parse(data);
-				console.log(json_data);
+				// console.log(json_data);
 				// console.log(data);
 				return callback(json_data);
 			});
@@ -177,7 +177,7 @@
 
 	// var units = "pm"; // Comment out when not in testing
 	var units = MashupPlatform.prefs.get('units'); // Remove comment when not in testing
-	console.log("Units: ", units, ", ", typeof units);
+	// console.log("Units: ", units, ", ", typeof units);
 	/**
 	 * draw data. This may be part of a controller code in MVC
 	 */

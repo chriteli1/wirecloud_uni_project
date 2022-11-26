@@ -18,9 +18,6 @@
 	//   };
 	/*=======================================================*/
 	
-	var title = document.getElementById("entityId"); // This is needed to check if widget is visible atm
-
-
 	//Find the id of the selected entity
 	var handlerEntityIdInput = function handlerEntityIdInput(graph_input) {
 		// console.log("Hidden: ", document.visibilityState);
@@ -38,7 +35,7 @@
 					var entityId = graph_input.id;
 					g_entityId = entityId;
 					document.getElementById("entityId").innerHTML = entityId;
-					if(!$(title).is(":hidden")) init();
+					init();
 				}
 			// }
 			
@@ -69,8 +66,10 @@
 		if (loadLocalData) {
 			return callback(rawTemperatureSamples); //return samples from samples.js
 		} else {
-			var aggr_method = "max";
 
+			// var aggr_method = "sum"; //For testing only
+
+			var aggr_method = MashupPlatform.prefs.get('aggr_method'); //Comment out when testing outside wirecloud
 			var data1, data2, data3, data4, data5 = "";
 
 			var data = "";
@@ -133,7 +132,7 @@
 				data = data1 + data2 + data3 + data4 + data5;
 				data = data.replace(/'/g, '"');
 				json_data = JSON.parse(data);
-				console.log(json_data);
+				// console.log(json_data);
 				// console.log(data);
 				return callback(json_data);
 			});
@@ -156,11 +155,18 @@
 		}
 	}
 
-	function parseSamples(values) {
+	function parseSamples(values, origin) {
 		return values.map(function(point) {
+			var keys = Object.keys(point); //Find the keys of input object
+			var value = point[keys[2]]; //Find which key to use based on the aggregation method chosen by the user
+			
+			var time_point = Date.parse(origin); //Timestamp of the origin of the aggregated values
+			time_point += point.offset*60000; //Add the offset (aggregation method=minutes so (time*60seconds)*1000milliseconds))
+			// console.log(time_point);
+
 			return {
-				x: new Date(point.offset),
-				y: point.max
+				x: new Date(time_point),
+				y: value = "sum" ? value/point.samples : value
 			}
 		});
 	}
@@ -219,17 +225,22 @@
 	function init() {
 
 		return loadData(function(data) {
-			var values = [], attrName = [];
+			var values = [], attrName = [], origin = [];
 
-			values[2] = data[0].value[0].points;
+			values[0] = data[0].value[0].points;
 			// attrName[2] = data[data.length - 3].contextResponses[0].contextElement.attributes[0].name;
-			attrName[2] = "PM1";
-			values[3] = data[1].value[0].points;
+			attrName[0] = "PM1";
+			origin[0] = data[0].value[0]._id.origin;
+
+			values[1] = data[1].value[0].points;
 			// attrName[3] = data[data.length - 4].contextResponses[0].contextElement.attributes[0].name;
-			attrName[3] = "PM2.5";
-			values[4] = data[2].value[0].points;
+			attrName[1] = "PM2.5";
+			origin[1] = data[1].value[0]._id.origin;
+
+			values[2] = data[2].value[0].points;
 			// attrName[4] = data[data.length - 5].contextResponses[0].contextElement.attributes[0].name;
-			attrName[4] = "PM10";
+			attrName[2] = "PM10";
+			origin[2] = data[2].value[0]._id.origin;
 
 
 			// var samples = [
@@ -250,33 +261,36 @@
 			// loadGraph(samples);
 		
 		
-			values[0] = data[3].value[0].points;
+			values[3] = data[3].value[0].points;
 			// attrName[0] = data[data.length - 1].contextResponses[0].contextElement.attributes[0].name;
-			attrName[0]= "RH";
-			values[1] = data[4].value[0].points;
+			attrName[3]= "RH";
+			origin[3] = data[3].value[0]._id.origin;
+
+			values[4] = data[4].value[0].points;
 			// attrName[1] = data[data.length - 2].contextResponses[0].contextElement.attributes[0].name;
-			attrName[1] = "Temperature";
+			attrName[4] = "Temperature";
+			origin[4] = data[4].value[0]._id.origin;
 
 			var samples = [
 				{
 					key: attrName[0],
-					values: parseSamples(values[0])
+					values: parseSamples(values[0], origin[0])
 				},
 				{
 					key: attrName[1],
-					values: parseSamples(values[1])
+					values: parseSamples(values[1], origin[1])
 				},
 				{
 					key: attrName[2],
-					values: parseSamples(values[2])
+					values: parseSamples(values[2], origin[2])
 				},
 				{
 					key: attrName[3],
-					values: parseSamples(values[3])
+					values: parseSamples(values[3], origin[3])
 				},
 				{
 					key: attrName[4],
-					values: parseSamples(values[4])
+					values: parseSamples(values[4], origin[4])
 				}
 			];
 			

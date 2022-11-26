@@ -19,7 +19,7 @@ function loadData() {
 
             /* Modify data to be JSON ready */
             alert_data = e.data.replace(/'/g, '"');
-            console.log(alert_data);
+            // console.log(alert_data);
             alert_data_json = JSON.parse(alert_data);
             /*==============================*/
             i = 0
