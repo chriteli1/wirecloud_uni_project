@@ -1,3 +1,8 @@
+## v4.0.1 (Chris Telioglanidis, 26-11-2022)
+
+- Small change to the way subscriptions are made because ngsi_proxy values refresh wasn't working.
+
+
 ## v4.0.0 (2017-12-07)
 
 - Updated to use NGSIv2 (NGSIv1 support dropped)

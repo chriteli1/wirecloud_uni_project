@@ -153,8 +153,7 @@
             this.connection.v2.createSubscription({
                 description: "ngsi source subscription",
                 subject: {
-                    entities: entities,
-                    condition: condition
+                    entities: entities
                 },
                 notification: {
                     attrsFormat: "keyValues",
