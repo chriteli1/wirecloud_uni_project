@@ -14,6 +14,7 @@
 
 	var title = document.getElementById("entityId"); // This is needed to check if widget is visible atm
 
+	var refresh_cntr = 0;
 
 
 	/*===For testing only, comment out when not in testing===*/
@@ -27,10 +28,13 @@
 	var handlerEntityIdInput = function handlerEntityIdInput(graph_input) {
 		// console.log("Hidden: ", document.visibilityState);
 		//console.log("Title hidden: ", $(title).is(":hidden"));
-		if (graph_input != null && graph_input.id != null && !$(title).is(":hidden")){
+		refresh_cntr++ ;
+		if (graph_input != null && graph_input.id != null){
 			// console.log("not hidden");
 			
-			if(!pause_flag){
+			
+			if(!pause_flag && !$(title).is(":hidden") && refresh_cntr > 25){
+				refresh_cntr = 0;
 				var entityId = graph_input.id;
 				g_entityId = entityId;
 				document.getElementById("entityId").innerHTML = entityId;
@@ -75,19 +79,7 @@
 			return callback(rawTemperatureSamples); //return samples from samples.js
 		} else {
 			var data1, data2, data3, data4, data5 = "";
-			// url = "http://localhost:5000/";
-			// var req1 = $.get("url" + g_entityId + "/pm1", function(response){ data = response });
-			// var req2 = $.get("url" + g_entityId + "/pm2_5", function(response){ data += response });
-			// var req3 = $.get("url" + g_entityId + "/pm10", function(response){ data += response });
-			// var req4 = $.get("url" + g_entityId + "/rh", function(response){ data += response });
-			// var req5 = $.get("url" + g_entityId + "/temp", function(response){ data += response });
-			// $.when(req1, req2, req3, req4, req5).done(function() {
-			// 	data = data.replace(/'/g, '"');
-			// 	data = data.replace(/False/g, 'false');
-			// 	json_data = JSON.parse(data); 
-			// 	console.log(json_data);
-			// 	return callback(json_data);
-			// });
+			
 			var data = "";
 			var req1 = $.ajax({
 				method: 'GET',
