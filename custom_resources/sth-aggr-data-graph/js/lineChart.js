@@ -68,15 +68,18 @@
 		} else {
 
 			// var aggr_method = "sum"; //For testing only
-
+			// var aggr_period = "minute"; //For testing only
+			// var proxy_url = "http://localhost:5000" //For testing only
 			var aggr_method = MashupPlatform.prefs.get('aggr_method'); //Comment out when testing outside wirecloud
+			var aggr_period = MashupPlatform.prefs.get('aggr_period'); //Comment out when testing outside wirecloud
+			var proxy_url = MashupPlatform.prefs.get('proxy_url'); //Comment out when testing outside wirecloud
 			var data1, data2, data3, data4, data5 = "";
 
 			var data = "";
 			var req1 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/pm1/" + aggr_method,
+				url: proxy_url + "/" + g_entityId + "/pm1/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data1 = JSON.stringify(response);
 					data1 = data1.slice(1, -1);
@@ -87,7 +90,7 @@
 			var req2 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/pm2_5/" + aggr_method,
+				url: 'http://localhost:5000/' + g_entityId + "/pm2_5/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data2 =  JSON.stringify(response);
 					data2 = data2.slice(1, -1);
@@ -98,7 +101,7 @@
 			var req3 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/pm10/" + aggr_method,
+				url: 'http://localhost:5000/' + g_entityId + "/pm10/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data3 =  JSON.stringify(response);
 					data3 = data3.slice(1, -1);
@@ -109,7 +112,7 @@
 			var req4 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/rh/" + aggr_method,
+				url: 'http://localhost:5000/' + g_entityId + "/rh/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data4 =  JSON.stringify(response);
 					data4 = data4.slice(1, -1);
@@ -120,7 +123,7 @@
 			var req5 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/temp/" + aggr_method,
+				url: 'http://localhost:5000/' + g_entityId + "/temp/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data5 =  JSON.stringify(response);
 					data5 = data5.slice(1, -1);
@@ -158,15 +161,17 @@
 	function parseSamples(values, origin) {
 		return values.map(function(point) {
 			var keys = Object.keys(point); //Find the keys of input object
-			var value = point[keys[2]]; //Find which key to use based on the aggregation method chosen by the user
-			
+			var value_name = keys[2]; //Find which key to use based on the aggregation method chosen by the user
+
+			var value = point[keys[2]]; 
+			// console.log("value: ", typeof(value));
 			var time_point = Date.parse(origin); //Timestamp of the origin of the aggregated values
 			time_point += point.offset*60000; //Add the offset (aggregation method=minutes so (time*60seconds)*1000milliseconds))
 			// console.log(time_point);
 
 			return {
 				x: new Date(time_point),
-				y: value = "sum" ? value/point.samples : value
+				y: value = value_name == "sum" ? value/point.samples : value
 			}
 		});
 	}
@@ -225,75 +230,55 @@
 	function init() {
 
 		return loadData(function(data) {
-			var values = [], attrName = [], origin = [];
-
-			values[0] = data[0].value[0].points;
-			// attrName[2] = data[data.length - 3].contextResponses[0].contextElement.attributes[0].name;
-			attrName[0] = "PM1";
-			origin[0] = data[0].value[0]._id.origin;
-
-			values[1] = data[1].value[0].points;
-			// attrName[3] = data[data.length - 4].contextResponses[0].contextElement.attributes[0].name;
-			attrName[1] = "PM2.5";
-			origin[1] = data[1].value[0]._id.origin;
-
-			values[2] = data[2].value[0].points;
-			// attrName[4] = data[data.length - 5].contextResponses[0].contextElement.attributes[0].name;
-			attrName[2] = "PM10";
-			origin[2] = data[2].value[0]._id.origin;
-
-
-			// var samples = [
-			// 	{
-			// 		key: attrName[2],
-			// 		values: parseSamples(values[2])
-			// 	},
-			// 	{
-			// 		key: attrName[3],
-			// 		values: parseSamples(values[3])
-			// 	},
-			// 	{
-			// 		key: attrName[4],
-			// 		values: parseSamples(values[4])
-			// 	}
-			// ];
+			var values = [], attrName = [], origin;
+			var samples_values_temp = [], samples_values_total = [];
+			attrName = ["PM1", "PM2.5", "PM10", "RH", "Temperature"];
+			for (let i=0; i < data.length; i++){
+				for(let j=0; j < data[i].value.length; j++){
+					values = data[i].value[j].points;
+					origin = data[i].value[j]._id.origin;
+				
 			
-			// loadGraph(samples);
-		
-		
-			values[3] = data[3].value[0].points;
-			// attrName[0] = data[data.length - 1].contextResponses[0].contextElement.attributes[0].name;
-			attrName[3]= "RH";
-			origin[3] = data[3].value[0]._id.origin;
+					// console.log("Values: ", values);
+					// console.log("Origin: ", origin);
 
-			values[4] = data[4].value[0].points;
-			// attrName[1] = data[data.length - 2].contextResponses[0].contextElement.attributes[0].name;
-			attrName[4] = "Temperature";
-			origin[4] = data[4].value[0]._id.origin;
+					// samples_values_total[j] = parseSamples(values, origin);
+					// samples_origin_total[i].push(origin);
+					samples_values_temp = j > 0 ? samples_values_temp.concat(parseSamples(values, origin)) : parseSamples(values, origin);
+					// console.log("Samples values: ", samples_values_temp);
+					// console.log("Samples origin: ", samples_origin_total);
 
+			
+				}
+
+				samples_values_total[i] = samples_values_temp;
+			}
+
+			// console.log("Total: ", samples_values_total);
 			var samples = [
 				{
 					key: attrName[0],
-					values: parseSamples(values[0], origin[0])
+					values: samples_values_total[0]
 				},
 				{
 					key: attrName[1],
-					values: parseSamples(values[1], origin[1])
+					values: samples_values_total[1]
 				},
 				{
 					key: attrName[2],
-					values: parseSamples(values[2], origin[2])
+					values: samples_values_total[2]
 				},
 				{
 					key: attrName[3],
-					values: parseSamples(values[3], origin[3])
+					values: samples_values_total[3]
 				},
 				{
 					key: attrName[4],
-					values: parseSamples(values[4], origin[4])
+					values: samples_values_total[4]
 				}
 			];
-			
+
+
 			loadGraph(samples);
 		
 		});

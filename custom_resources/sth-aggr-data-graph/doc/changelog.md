@@ -1,3 +1,11 @@
+## v2.1
+
+- Add proxy server's url preference
+
+## v2.0
+
+- Add aggregation period preference
+
 ## v1.3
 
 - Use the aggregation method user preference.

@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-aggr-graph-general" version="1.3">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-aggr-graph-general" version="2.1">
     <details>
         <title>Graph for Comet aggregated data</title>
         <email>christelioglanidis@outlook.com</email>
@@ -21,6 +21,13 @@
             <option value="min" label="Min"/>
             <option value="sum" label="Avg"/>
         </preference>
+        <preference name="aggr_period" type="list" label="Aggregation period" description="Choose aggregation period" >
+            <option value="minute" label="Minute"/>
+            <option value="hour" label="Hour"/>
+            <option value="day" label="Day"/>
+            <option value="month" label="Month"/>
+        </preference>
+        <preference name="proxy_url" type="text" label="Proxy URL" description="URL of the proxy server that is responsible for data retrieval" default="http://localhost:5000"/>
     </preferences>
     
     <wiring>
