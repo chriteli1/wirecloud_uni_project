@@ -1,3 +1,4 @@
+# v1.0
 from crypt import methods
 import mimetypes
 from urllib import response
@@ -68,15 +69,16 @@ def send_data_to_wirecloud(entity_id, attr):
     #print(output)
     return str(output)
 
-@app.route('/<string:entity_id>/<string:attr>/<string:method>', methods=['GET'])
-def send_aggr_data_to_wirecloud(entity_id, attr, method):
+@app.route('/<string:entity_id>/<string:attr>/<string:method>/<string:period>', methods=['GET'])
+def send_aggr_data_to_wirecloud(entity_id, attr, method, period):
 
 
-    # # datetime object containing current date and time
-    # now = datetime.now()
-    # print(type(now)) 
+    # datetime object containing current date and time
+    now = datetime.now() 
+    now_str = str(now).replace(" ", "T") + "Z"
+    # print(now_str)
 
-    url = "http://localhost:8666/STH/v2/entities/" + entity_id + "/attrs/" + attr + "?type=room&aggrMethod=" + method + "&aggrPeriod=minute&dateFrom=2022-11-25T12:29:27.229Z&dateTo=2022-11-25T15:30:00.000Z"
+    url = "http://localhost:8666/STH/v2/entities/" + entity_id + "/attrs/" + attr + "?type=room&aggrMethod=" + method + "&aggrPeriod=" + period + "&dateFrom=2022-10-20T15:30:00.000Z&dateTo=" + now_str
     
     payload = {}
     headers = {
