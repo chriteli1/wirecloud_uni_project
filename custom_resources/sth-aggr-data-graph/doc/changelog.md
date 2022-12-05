@@ -1,3 +1,8 @@
+## v2.2
+
+- Delete hardcoded proxy server's url.
+
+
 ## v2.1
 
 - Add proxy server's url preference

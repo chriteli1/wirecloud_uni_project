@@ -90,7 +90,7 @@
 			var req2 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/pm2_5/" + aggr_method + "/" + aggr_period,
+				url: proxy_url + g_entityId + "/pm2_5/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data2 =  JSON.stringify(response);
 					data2 = data2.slice(1, -1);
@@ -101,7 +101,7 @@
 			var req3 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/pm10/" + aggr_method + "/" + aggr_period,
+				url: proxy_url + g_entityId + "/pm10/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data3 =  JSON.stringify(response);
 					data3 = data3.slice(1, -1);
@@ -112,7 +112,7 @@
 			var req4 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/rh/" + aggr_method + "/" + aggr_period,
+				url: proxy_url + g_entityId + "/rh/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data4 =  JSON.stringify(response);
 					data4 = data4.slice(1, -1);
@@ -123,7 +123,7 @@
 			var req5 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/temp/" + aggr_method + "/" + aggr_period,
+				url: proxy_url + g_entityId + "/temp/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data5 =  JSON.stringify(response);
 					data5 = data5.slice(1, -1);

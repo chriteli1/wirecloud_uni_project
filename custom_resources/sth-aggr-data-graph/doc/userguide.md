@@ -5,6 +5,9 @@ This is a widget for plotting aggregated STH Comet data. It makes HTTP GET reque
 # Settings
 
 - **Aggregation method**: You can choose between Max, Min and Mean values to be plotted. 
+- **Aggregation period**: You can choose between Minute, Hour, Day and Month.
+- **Proxy URL**: Enter the URL of the proxy server responsible for fetching data from Comet. 
+
 
 # Wiring
 
