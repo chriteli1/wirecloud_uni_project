@@ -61,6 +61,8 @@
 
 	function loadData(callback) {
 
+		// var proxy_url = "http://65.109.137.229:5000/"
+		var proxy_url = MashupPlatform.prefs.get('proxy_url'); // Remove comment when not in testing
 		// console.log("ID:", g_entityId);
 		var loadLocalData = false,     //change this if you want to perform a request to a real instance of sth-comet
 		//change the urlParams and headers if you want to query your own entity data.
@@ -84,7 +86,7 @@
 			var req1 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/pm1",
+				url: proxy_url + g_entityId + "/pm1",
 				success: function(response) {
 					data1 = JSON.stringify(response);
 					data1 = data1.slice(1, -1);
@@ -95,7 +97,7 @@
 			var req2 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/pm2_5",
+				url: proxy_url + g_entityId + "/pm2_5",
 				success: function(response) {
 					data2 =  JSON.stringify(response);
 					data2 = data2.slice(1, -1);
@@ -106,7 +108,7 @@
 			var req3 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/pm10",
+				url: proxy_url + g_entityId + "/pm10",
 				success: function(response) {
 					data3 =  JSON.stringify(response);
 					data3 = data3.slice(1, -1);
@@ -117,7 +119,7 @@
 			var req4 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/rh",
+				url: proxy_url + g_entityId + "/rh",
 				success: function(response) {
 					data4 =  JSON.stringify(response);
 					data4 = data4.slice(1, -1);
@@ -128,7 +130,7 @@
 			var req5 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: 'http://localhost:5000/' + g_entityId + "/temp",
+				url: proxy_url + g_entityId + "/temp",
 				success: function(response) {
 					data5 =  JSON.stringify(response);
 					data5 = data5.slice(1, -1);
@@ -276,7 +278,7 @@
 						values: parseSamples(values[1])
 					}
 				];
-				
+					
 				loadGraph(samples);
 			}
 		});

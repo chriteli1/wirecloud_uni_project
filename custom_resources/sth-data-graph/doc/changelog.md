@@ -1,3 +1,8 @@
+## v3.4
+
+- Add proxy server url preference (it was hardcoded inside widget script).
+
+
 ## v3.3
 
 - Live feed was too heavy on the browser, so the graph refreshes every 25 new values.
