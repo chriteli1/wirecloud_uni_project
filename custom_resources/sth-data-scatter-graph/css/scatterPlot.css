@@ -11,7 +11,7 @@ element::-webkit-scrollbar {
 }
 
 
-#pause {
+/* #refresh {
     align-self: center;
     font-weight: bold;
     border-color: #9B9B9B;
@@ -19,6 +19,10 @@ element::-webkit-scrollbar {
     border-style: solid;
     border-radius: 8px;
 }
+
+#refresh:active {
+    opacity: 0.6;
+} */
 
 body {
     display: flex;

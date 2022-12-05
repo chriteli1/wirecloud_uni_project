@@ -1,19 +1,11 @@
 (function(){
 	
 	var g_entityId;//global entity id
-	var pause_flag = false;
+	var refresh_flag = false;
 	// console.log("Start");
-	document.getElementById("pause").addEventListener("click", Pause_Live);
+	// document.getElementById("refresh").addEventListener("click", function(){refresh_flag = true;});
 	
-	function Pause_Live(){
-		pause_flag = !pause_flag;
-		document.getElementById("pause").innerHTML = pause_flag ? "Go Live" : "Pause Feed";
-		// console.log("pause inside function: ", pause_flag);
-	}
-
 	var title = document.getElementById("entityId"); // This is needed to check if widget is visible atm
-
-	var refresh_cntr = 0;
 
 
 	/*===For testing only, comment out when not in testing===*/
@@ -27,26 +19,26 @@
 	var handlerEntityIdInput = function handlerEntityIdInput(graph_input) {
 		// console.log("Hidden: ", document.visibilityState);
 		//console.log("Title hidden: ", $(title).is(":hidden"));
-		refresh_cntr++ ;
+		
 		if (graph_input != null && graph_input.id != null){
 			// console.log("not hidden");
 			
 			
-			if(!pause_flag && !$(title).is(":hidden") && refresh_cntr > 25){
-				refresh_cntr = 0;
-				var entityId = graph_input.id;
-				g_entityId = entityId;
-				document.getElementById("entityId").innerHTML = entityId;
-				init();
-			}
-			else{
+			// if(!$(title).is(":hidden") && refresh_flag){
+			// 	refresh_flag = false;
+			// 	var entityId = graph_input.id;
+			// 	g_entityId = entityId;
+			// 	document.getElementById("entityId").innerHTML = entityId;
+			// 	init();
+			// }
+			// else{
 				if(graph_input.id != g_entityId){
 					var entityId = graph_input.id;
 					g_entityId = entityId;
 					document.getElementById("entityId").innerHTML = entityId;
 					init();
 				}
-			}
+			// }
 			
 			
 			
@@ -177,9 +169,6 @@
 
 
 
-	// var units = "pm"; // Comment out when not in testing
-	// var units = MashupPlatform.prefs.get('units'); // Remove comment when not in testing
-	// console.log("Units: ", units, ", ", typeof units);
 	/**
 	 * draw data. This may be part of a controller code in MVC
 	 */
