@@ -1,0 +1,21 @@
+{
+  "name": "sth-graphs",
+  "version": "0.0.0",
+  "description": "Graphs examples for Fiware sth-comet (https://github.com/telefonicaid/fiware-sth-comet)",
+  "license": "MIT",
+  "private": true,
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "nvd3": "~1.8.2",
+    "jquery": "~2.2.0",
+    "angularjs": "~1.4.9",
+    "angular-nvd3": "~1.0.5",
+    "angular-i18n": "~1.4.9"
+  }
+}
