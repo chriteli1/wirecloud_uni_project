@@ -1,4 +1,3 @@
-
 (function(){
 	
 	var g_entityId;//global entity id
@@ -18,6 +17,15 @@
 	//   };
 	/*=======================================================*/
 	
+	// var aggr_method = "sum"; //For testing only
+	// var aggr_period = "minute"; //For testing only
+	// var proxy_url = "http://localhost:5000" //For testing only
+	var aggr_method = MashupPlatform.prefs.get('aggr_method'); //Comment out when testing outside wirecloud
+	var aggr_period = MashupPlatform.prefs.get('aggr_period'); //Comment out when testing outside wirecloud
+	var proxy_url = MashupPlatform.prefs.get('proxy_url'); //Comment out when testing outside wirecloud
+			
+
+
 	//Find the id of the selected entity
 	var handlerEntityIdInput = function handlerEntityIdInput(graph_input) {
 		// console.log("Hidden: ", document.visibilityState);
@@ -47,6 +55,8 @@
 	MashupPlatform.wiring.registerCallback("POIselected", handlerEntityIdInput); 
 	
 
+
+
 	function loadData(callback) {
 
 		// console.log("ID:", g_entityId);
@@ -67,12 +77,6 @@
 			return callback(rawTemperatureSamples); //return samples from samples.js
 		} else {
 
-			// var aggr_method = "sum"; //For testing only
-			// var aggr_period = "minute"; //For testing only
-			// var proxy_url = "http://localhost:5000" //For testing only
-			var aggr_method = MashupPlatform.prefs.get('aggr_method'); //Comment out when testing outside wirecloud
-			var aggr_period = MashupPlatform.prefs.get('aggr_period'); //Comment out when testing outside wirecloud
-			var proxy_url = MashupPlatform.prefs.get('proxy_url'); //Comment out when testing outside wirecloud
 			var data1, data2, data3, data4, data5 = "";
 
 			var data = "";
@@ -166,7 +170,22 @@
 			var value = point[keys[2]]; 
 			// console.log("value: ", typeof(value));
 			var time_point = Date.parse(origin); //Timestamp of the origin of the aggregated values
-			time_point += point.offset*60000; //Add the offset (aggregation method=minutes so (time*60seconds)*1000milliseconds))
+			switch (aggr_period){
+				case "minute":
+					//Add the offset (aggregation method=minutes so (time*60seconds)*1000milliseconds))
+					time_point += point.offset*60000;
+					break;
+				case "hour":
+					//Add the offset (aggregation method=minutes so (time*60seconds*60minutes)*1000milliseconds))
+					time_point += point.offset*60000*60;
+					break;
+				case "day":
+					//Add the offset (aggregation method=minutes so (time*60seconds*60min*24hours)*1000milliseconds))
+					time_point += point.offset*60000*60*24;
+					break;
+				default:
+					break;
+			}
 			// console.log(time_point);
 
 			return {

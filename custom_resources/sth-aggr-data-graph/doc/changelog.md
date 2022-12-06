@@ -1,3 +1,7 @@
+## v2.3
+
+- Offset was not calculated properly when aggregation period was hour or day. Fixed.
+
 ## v2.2
 
 - Delete hardcoded proxy server's url.
