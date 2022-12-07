@@ -15,12 +15,20 @@
 	//   };
 	/*=======================================================*/
 	
+	// var aggr_method = "sum"; //For testing only
+	// var aggr_period = "hour"; //For testing only
+	// var proxy_url = "http://localhost:5000" //For testing only
+	var aggr_method = MashupPlatform.prefs.get('aggr_method'); //Comment out when testing outside wirecloud
+	var aggr_period = MashupPlatform.prefs.get('aggr_period'); //Comment out when testing outside wirecloud
+	var proxy_url = MashupPlatform.prefs.get('proxy_url'); //Comment out when testing outside wirecloud
+
+
 	//Find the id of the selected entity
 	var handlerEntityIdInput = function handlerEntityIdInput(graph_input) {
 		// console.log("Hidden: ", document.visibilityState);
 		//console.log("Title hidden: ", $(title).is(":hidden"));
 		
-		if (graph_input != null && graph_input.id != null){
+		if (graph_input != null && graph_input.id != null && !$(title).is(":hidden")){
 			// console.log("not hidden");
 			
 			
@@ -52,8 +60,6 @@
 
 	function loadData(callback) {
 
-		// var proxy_url = "http://65.109.137.229:5000/" // Only for testing outside of Wirecloud
-		var proxy_url = MashupPlatform.prefs.get('proxy_url'); // Remove comment when not in testing
 		// console.log("ID:", g_entityId);
 		var loadLocalData = false,     //change this if you want to perform a request to a real instance of sth-comet
 		//change the urlParams and headers if you want to query your own entity data.
@@ -72,12 +78,12 @@
 			return callback(rawTemperatureSamples); //return samples from samples.js
 		} else {
 			var data1, data2, data3, data4, data5 = "";
-			
+
 			var data = "";
 			var req1 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: proxy_url + g_entityId + "/pm1",
+				url: proxy_url + "/" + g_entityId + "/pm1/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data1 = JSON.stringify(response);
 					data1 = data1.slice(1, -1);
@@ -88,7 +94,7 @@
 			var req2 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: proxy_url + g_entityId + "/pm2_5",
+				url: proxy_url + g_entityId + "/pm2_5/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data2 =  JSON.stringify(response);
 					data2 = data2.slice(1, -1);
@@ -99,7 +105,7 @@
 			var req3 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: proxy_url + g_entityId + "/pm10",
+				url: proxy_url + g_entityId + "/pm10/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data3 =  JSON.stringify(response);
 					data3 = data3.slice(1, -1);
@@ -110,7 +116,7 @@
 			var req4 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: proxy_url + g_entityId + "/rh",
+				url: proxy_url + g_entityId + "/rh/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data4 =  JSON.stringify(response);
 					data4 = data4.slice(1, -1);
@@ -121,7 +127,7 @@
 			var req5 = $.ajax({
 				method: 'GET',
 				// dataType: "string",
-				url: proxy_url + g_entityId + "/temp",
+				url: proxy_url + g_entityId + "/temp/" + aggr_method + "/" + aggr_period,
 				success: function(response) {
 					data5 =  JSON.stringify(response);
 					data5 = data5.slice(1, -1);
@@ -132,7 +138,7 @@
 			$.when(req1, req2, req3, req4, req5).done(function(){
 				data = data1 + data2 + data3 + data4 + data5;
 				data = data.replace(/'/g, '"');
-				var json_data = JSON.parse(data);
+				json_data = JSON.parse(data);
 				// console.log(json_data);
 				// console.log(data);
 				return callback(json_data);
@@ -160,9 +166,17 @@
 
 	function parseSamples(values1, values2) {
 		return values1.map(function(point, index) {
+			var keys1 = Object.keys(point); //Find the keys of input object
+			var value_name1 = keys1[2]; //Find the name of aggregation method chosen by the user
+			var value1 = point[keys1[2]]; //Find the value to be plotted
+
+			var keys2 = Object.keys(values2[index]); //Find the keys of input object
+			var value_name2 = keys2[2]; //Find the name of aggregation method chosen by the user
+			var value2 = values2[index][keys2[2]]; //Find the value to be plotted
+
 			return {
-				x: point.attrValue,
-				y: values2[index].attrValue
+				x: value2 = value_name2 == "sum" ? value2/values2[index].samples : value2,
+				y: value1 = value_name1 == "sum" ? value1/point.samples : value1
 			}
 		});
 	}
@@ -176,8 +190,8 @@
 
 		nv.addGraph(function() {
 			var chart = nv.models.scatterChart()
-            .showDistX(true)
-            .showDistY(true)
+            .showDistX(false)
+            .showDistY(false)
             .duration(300)
             .color(d3.scale.category10().range());
 
@@ -288,38 +302,47 @@
 	function init() {
 
 		return loadData(function(data) {
-			var values = [], attrName = [];
+			// var values = [], attrName = [];
 
-			values[0] = data[0].value;
-			attrName[0] = "PM1";
+			// values[0] = data[0].value;
+			// attrName[0] = "PM1";
 
-			values[1] = data[1].value;
-			attrName[1] = "PM2.5";
+			// values[1] = data[1].value;
+			// attrName[1] = "PM2.5";
 
-			values[2] = data[2].value;
-			attrName[2] = "PM10";
+			// values[2] = data[2].value;
+			// attrName[2] = "PM10";
 
-			values[3] = data[3].value;
+			// values[3] = data[3].value;
 			// console.log("RH: ", values[3]);
+			var values = [];
+			var samples_values_total = [];
+			attrName = ["PM1", "PM2.5", "PM10", "RH", "Temperature"];
+			for (let i=0; i < data.length; i++){
+				for(let j=0; j < data[i].value.length; j++){
+					values = j > 0 ? values.concat(data[i].value[j].points) : data[i].value[j].points;		
+				}
 
-			
+				samples_values_total[i] = values;
+				// console.log(samples_values_total);
+			}
 
 			var samples = [
 				{
 					key: attrName[0],
-					values: parseSamples(values[3], values[0]),
+					values: parseSamples(samples_values_total[0], samples_values_total[3]),
 					slope: Math.random() - .01,
 					intercept: 2
 				},
 				{
 					key: attrName[1],
-					values: parseSamples(values[3], values[1]),
+					values: parseSamples(samples_values_total[1], samples_values_total[3]),
 					slope: Math.random() - .01,
 					intercept: 4
 				},
 				{
 					key: attrName[2],
-					values: parseSamples(values[3], values[2]),
+					values: parseSamples(samples_values_total[2], samples_values_total[3]),
 					slope: Math.random() - .01,
 					intercept: 8
 				}

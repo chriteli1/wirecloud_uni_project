@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-scatter-graph" version="1.2">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-scatter-graph" version="2.0">
     <details>
         <title>Scatter plot for Comet data</title>
         <email>christelioglanidis@outlook.com</email>
@@ -16,6 +16,16 @@
     </details>
 
     <preferences>
+        <preference name="aggr_method" type="list" label="Aggregation method" description="Choose what aggregation method you want to plot" default="max">
+            <option value="max" label="Max"/>
+            <option value="min" label="Min"/>
+            <option value="sum" label="Avg"/>
+        </preference>
+        <preference name="aggr_period" type="list" label="Aggregation period" description="Choose aggregation period" >
+            <option value="minute" label="Minute"/>
+            <option value="hour" label="Hour"/>
+            <option value="day" label="Day"/>
+        </preference>
         <preference name="proxy_url" type="text" label="Proxy URL" description="URL of the proxy server that is responsible for data retrieval" default="http://localhost:5000"/>
     </preferences>
     
