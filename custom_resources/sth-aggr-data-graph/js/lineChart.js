@@ -1,14 +1,6 @@
 (function(){
 	
 	var g_entityId;//global entity id
-	// var pause_flag = false;
-	// console.log("Start");
-	// document.getElementById("pause").addEventListener("click", Pause_Live);
-	// function Pause_Live(){
-	// 	pause_flag = !pause_flag;
-	// 	document.getElementById("pause").innerHTML = pause_flag ? "Go Live" : "Pause Feed";
-	// 	console.log("pause inside function: ", pause_flag);
-	// }
 
 	/*===For testing only, comment out when not in testing===*/
 	// var graph_input = {id : "Room2"};
@@ -18,7 +10,7 @@
 	/*=======================================================*/
 	
 	// var aggr_method = "sum"; //For testing only
-	// var aggr_period = "minute"; //For testing only
+	// var aggr_period = "hour"; //For testing only
 	// var proxy_url = "http://localhost:5000" //For testing only
 	var aggr_method = MashupPlatform.prefs.get('aggr_method'); //Comment out when testing outside wirecloud
 	var aggr_period = MashupPlatform.prefs.get('aggr_period'); //Comment out when testing outside wirecloud
@@ -57,110 +49,76 @@
 
 
 
+	var g_attr_names = []; //Global attributes' names
 	function loadData(callback) {
 
-		// console.log("ID:", g_entityId);
-		var loadLocalData = false,     //change this if you want to perform a request to a real instance of sth-comet
-		//change the urlParams and headers if you want to query your own entity data.
-			urlParams = {
-				dateFrom: '2015-11-26T00:00:00.000Z',
-				dateTo: '2015-11-26T23:00:00.000Z',
-				lastN: 2000
-			},
-			headers = {
-				//'Fiware-Service': 'something',
-				//'Fiware-ServicePath': '/'
-				//'X-Auth-Token': 'XXXXXXX'
-			};
-
-		if (loadLocalData) {
-			return callback(rawTemperatureSamples); //return samples from samples.js
-		} else {
-
-			var data1, data2, data3, data4, data5 = "";
-
-			var data = "";
-			var req1 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + "/" + g_entityId + "/pm1/" + aggr_method + "/" + aggr_period,
-				success: function(response) {
-					data1 = JSON.stringify(response);
-					data1 = data1.slice(1, -1);
-					data1 = "[" + data1 + ", ";
-					// data = data1;
-				}
-			});
-			var req2 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/pm2_5/" + aggr_method + "/" + aggr_period,
-				success: function(response) {
-					data2 =  JSON.stringify(response);
-					data2 = data2.slice(1, -1);
-					data2 = data2 + ", ";
-					// data += data1;
-				}
-			});
-			var req3 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/pm10/" + aggr_method + "/" + aggr_period,
-				success: function(response) {
-					data3 =  JSON.stringify(response);
-					data3 = data3.slice(1, -1);
-					data3 = data3 + ", ";
-					// data += data1;
-				}
-			});
-			var req4 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/rh/" + aggr_method + "/" + aggr_period,
-				success: function(response) {
-					data4 =  JSON.stringify(response);
-					data4 = data4.slice(1, -1);
-					data4 = data4 + ", ";
-					// data += data1;
-				}
-			});
-			var req5 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/temp/" + aggr_method + "/" + aggr_period,
-				success: function(response) {
-					data5 =  JSON.stringify(response);
-					data5 = data5.slice(1, -1);
-					data5 = data5 + "]";
-					// data += data1;
-				}
-			});
-			$.when(req1, req2, req3, req4, req5).done(function(){
-				data = data1 + data2 + data3 + data4 + data5;
-				data = data.replace(/'/g, '"');
-				json_data = JSON.parse(data);
-				// console.log(json_data);
+		
+		var data_total = "";
+		// var data_temp = "";
+		var num_of_attrs = 0;
+		var orion_data;
+		var req_cntr = 1;
+		var orion_req = $.ajax({
+			method: 'GET',
+			url: proxy_url + g_entityId,
+			// headers: headers,
+			success: function(response) {
+				// console.log("orion response: ", response);
+				var data = response.replace(/'/g, "\"");
 				// console.log(data);
-				return callback(json_data);
-			});
-			// return $.ajax({
-			// 	method: 'GET',
-			// 	//Change this URL if you want to use your own sth-comet
-			// 	//url: 'http://localhost:8666/STH/v1/contextEntities/type/room/id/Room2/attributes/temp',
-			// 	url: 'http://localhost:5000/' + g_entityId + "/",
-			// 	//data: urlParams,
-			// 	//headers: headers,
-			// 	//dataType: 'str',
-			// 	success: function(data) {
-			// 		data = data.replace(/'/g, '"');
-			// 		data = data.replace(/False/g, 'false');
-			// 		json_data = JSON.parse(data); 
-			// 		console.log(json_data);
-			// 		return callback(json_data);
-			// 	}
-			// });
-		}
+				var data_json = JSON.parse(data);
+				num_of_attrs = Object.keys(data_json).length;
+				
+				orion_data = data_json;
+				// console.log(orion_data); 
+
+			}
+		});
+		var req_cntr = 1;
+		$.when(orion_req).done(function create_data() {
+			// while(req_cntr < num_of_attrs){
+			var attr_name = Object.keys(orion_data)[req_cntr];
+			g_attr_names.push(attr_name);
+			comet_req(attr_name, proxy_url).then(
+				function(data){
+					// console.log("data: ", data);
+					req_cntr++;
+					// console.log(req_cntr);
+					if(req_cntr < num_of_attrs) {
+						data_total += data + ", ";
+						create_data();
+					}
+					else {
+						data_total = "[" + data_total;
+						data_total += data + "]";
+						data_total = data_total.replace(/'/g, '"');
+						// console.log(data_total);
+						// console.log("Total: ", JSON.parse(data_total));
+
+						callback(JSON.parse(data_total));
+					}
+				}
+			);
+		});
+		
 	}
+	
+	async function comet_req(attr_name, proxy_url){
+		var data_temp;
+		return $.ajax({
+			method: 'GET',
+			url: proxy_url + g_entityId + "/" + attr_name + "/" + aggr_method + "/" + aggr_period,
+			success: function(response){
+				data_temp = JSON.stringify(response);
+				data_temp = data_temp.slice(1, -1);
+				// data_total += data_temp; 
+				// console.log("data_temp: ", data_temp);
+				return data_temp
+			}
+		});
+		
+	}
+	
 
 	function parseSamples(values, origin) {
 		return values.map(function(point) {
@@ -250,54 +208,23 @@
 
 		return loadData(function(data) {
 			var values = [], attrName = [], origin;
-			var samples_values_temp = [], samples_values_total = [];
+			var samples_values_temp = [], samples = [];
 			attrName = ["PM1", "PM2.5", "PM10", "RH", "Temperature"];
 			for (let i=0; i < data.length; i++){
 				for(let j=0; j < data[i].value.length; j++){
 					values = data[i].value[j].points;
 					origin = data[i].value[j]._id.origin;
-				
-			
-					// console.log("Values: ", values);
-					// console.log("Origin: ", origin);
-
-					// samples_values_total[j] = parseSamples(values, origin);
-					// samples_origin_total[i].push(origin);
 					samples_values_temp = j > 0 ? samples_values_temp.concat(parseSamples(values, origin)) : parseSamples(values, origin);
-					// console.log("Samples values: ", samples_values_temp);
-					// console.log("Samples origin: ", samples_origin_total);
-
-			
+					
 				}
 
-				samples_values_total[i] = samples_values_temp;
+				samples[i] = {
+					key: g_attr_names[i],
+					values: samples_values_temp
+				};
 			}
 
-			// console.log("Total: ", samples_values_total);
-			var samples = [
-				{
-					key: attrName[0],
-					values: samples_values_total[0]
-				},
-				{
-					key: attrName[1],
-					values: samples_values_total[1]
-				},
-				{
-					key: attrName[2],
-					values: samples_values_total[2]
-				},
-				{
-					key: attrName[3],
-					values: samples_values_total[3]
-				},
-				{
-					key: attrName[4],
-					values: samples_values_total[4]
-				}
-			];
-
-
+			
 			loadGraph(samples);
 		
 		});

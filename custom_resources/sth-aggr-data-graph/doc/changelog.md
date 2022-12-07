@@ -1,3 +1,8 @@
+## v3.0
+
+- Universal interface for attributes.
+
+
 ## v2.3
 
 - Offset was not calculated properly when aggregation period was hour or day. Fixed.

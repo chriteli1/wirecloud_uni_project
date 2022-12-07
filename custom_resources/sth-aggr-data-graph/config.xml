@@ -1,10 +1,10 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-aggr-graph-general" version="2.3">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-aggr-graph-general" version="3.0">
     <details>
         <title>Graph for Comet aggregated data</title>
         <email>christelioglanidis@outlook.com</email>
         <image>img/lineChart.png</image>
-        <description>Plot aggregated data(PM1,PM10,PM2.5) from STH Comet</description>
+        <description>Plot aggregated data from STH Comet</description>
         <longdescription>DESCRIPTION.md</longdescription>
         <authors>Telis</authors>
         <homepage>https://github.com/chriteli1/wirecloud_uni_project/tree/main/custom_resources/sth-aggr-data-graph</homepage>
