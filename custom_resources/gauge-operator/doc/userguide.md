@@ -1,10 +1,10 @@
 # Introduction
 
-This operator accepts PM1, PM2.5, PM10, RH and Temperature values from the output of OpenLayers Map widget and sends them to the Gauge chart generator operator.
+This operator accepts attribute values from the output of OpenLayers Map widget and sends them to the Gauge chart generator operator.
 
 # Settings
 
-- **Unit**: Choose which unit you want to display in the chart.
+- **Measurement**: Choose which measurement you want to display in the chart.
 
 # Wiring
 

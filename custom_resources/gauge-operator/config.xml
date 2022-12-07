@@ -1,23 +1,23 @@
 <?xml version='1.1' encoding='UTF-8'?>
-<operator xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="pm-rh-t-gauge-operator" version="3.1">
+<operator xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="map-to-gauge-operator" version="3.2">
     <details>
         <title>Input for Gauge operator</title>
         <authors>Telis</authors>
         <email>christelioglanidis@outlook.com</email>
         <image>images/catalogue.png</image>
-        <description>Shows the real-time value of PM(1, 2.5, 10), RH and Temperature units. </description>
+        <description>Shows the real-time values of selected entity's attributes. </description>
         <doc>doc/userguide.md</doc>
         <changelog>doc/changelog.md</changelog>
     </details>
     
 	<preferences>
-		<preference name="unit" type="list" label="Unit" description="Choose between pm1, pm2_5, pm10, rh and temp" default="pm1">
-			<option value="pm1" label="PM1"/>
+		<preference name="measurement" type="text" label="Measurement" description="Enter the name of the attribute" default="pm1"/>
+			<!-- <option value="pm1" label="PM1"/>
             <option value="pm2_5" label="PM2.5"/>
             <option value="pm10" label="PM10"/>
 			<option value="rh" label="RH"/>
 			<option value="temp" label="Temperature"/>
-		</preference>
+		</preference> -->
 	</preferences>
 	
 	<wiring>
