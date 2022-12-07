@@ -1,4 +1,3 @@
-
 (function(){
 	
 	var g_entityId;//global entity id
@@ -32,7 +31,6 @@
 		if (graph_input != null && graph_input.id != null){
 			// console.log("not hidden");
 			
-			
 			if(!pause_flag && !$(title).is(":hidden") && refresh_cntr > 25){
 				refresh_cntr = 0;
 				var entityId = graph_input.id;
@@ -58,106 +56,86 @@
 	// Remove comment bellow when not in testing
 	MashupPlatform.wiring.registerCallback("POIselected", handlerEntityIdInput); 
 	
-
+	var g_attr_names = []; //Global attributes' names
 	function loadData(callback) {
 
 		// var proxy_url = "http://65.109.137.229:5000/"
 		var proxy_url = MashupPlatform.prefs.get('proxy_url'); // Remove comment when not in testing
+		// headers = {
+		// 	'Fiware-Service': 'something',
+		// 	'Fiware-ServicePath': '/'
+		// 	// 'X-Auth-Token': 'XXXXXXX'
+		// };
 		// console.log("ID:", g_entityId);
-		var loadLocalData = false,     //change this if you want to perform a request to a real instance of sth-comet
-		//change the urlParams and headers if you want to query your own entity data.
-			urlParams = {
-				dateFrom: '2015-11-26T00:00:00.000Z',
-				dateTo: '2015-11-26T23:00:00.000Z',
-				lastN: 2000
-			},
-			headers = {
-				//'Fiware-Service': 'something',
-				//'Fiware-ServicePath': '/'
-				//'X-Auth-Token': 'XXXXXXX'
-			};
 
-		if (loadLocalData) {
-			return callback(rawTemperatureSamples); //return samples from samples.js
-		} else {
-			var data1, data2, data3, data4, data5 = "";
-			
-			var data = "";
-			var req1 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/pm1",
-				success: function(response) {
-					data1 = JSON.stringify(response);
-					data1 = data1.slice(1, -1);
-					data1 = "[" + data1 + ", ";
-					// data = data1;
-				}
-			});
-			var req2 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/pm2_5",
-				success: function(response) {
-					data2 =  JSON.stringify(response);
-					data2 = data2.slice(1, -1);
-					data2 = data2 + ", ";
-					// data += data1;
-				}
-			});
-			var req3 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/pm10",
-				success: function(response) {
-					data3 =  JSON.stringify(response);
-					data3 = data3.slice(1, -1);
-					data3 = data3 + ", ";
-					// data += data1;
-				}
-			});
-			var req4 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/rh",
-				success: function(response) {
-					data4 =  JSON.stringify(response);
-					data4 = data4.slice(1, -1);
-					data4 = data4 + ", ";
-					// data += data1;
-				}
-			});
-			var req5 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/temp",
-				success: function(response) {
-					data5 =  JSON.stringify(response);
-					data5 = data5.slice(1, -1);
-					data5 = data5 + "]";
-					// data += data1;
-				}
-			});
-			$.when(req1, req2, req3, req4, req5).done(function(){
-				data = data1 + data2 + data3 + data4 + data5;
-				data = data.replace(/'/g, '"');
-				json_data = JSON.parse(data);
-				// console.log(json_data);
+		// var data1, data2, data3, data4, data5 = "";
+		
+		var data_total = "";
+		// var data_temp = "";
+		var num_of_attrs = 0;
+		var orion_data;
+		var req_cntr = 1;
+		var orion_req = $.ajax({
+			method: 'GET',
+			url: proxy_url + g_entityId,
+			// headers: headers,
+			success: function(response) {
+				// console.log("orion response: ", response);
+				var data = response.replace(/'/g, "\"");
 				// console.log(data);
-				return callback(json_data);
-			});
-			// return $.ajax({
-			// 	method: 'GET',
-			// 	url: 'http://localhost:5000/' + g_entityId + "/temp",
-			// 	success: function(data) {
-			// 		data = data.replace(/'/g, '"');
-			// 		data = data.replace(/False/g, 'false');
-			// 		json_data = JSON.parse(data); 
-			// 		console.log(json_data);
-			// 		// return callback(json_data);
-			// 	}
-			// });
-		}
+				var data_json = JSON.parse(data);
+				num_of_attrs = Object.keys(data_json).length;
+				
+				orion_data = data_json;
+				// console.log(orion_data); 
+
+			}
+		});
+		var req_cntr = 1;
+		$.when(orion_req).done(function create_data() {
+			// while(req_cntr < num_of_attrs){
+			var attr_name = Object.keys(orion_data)[req_cntr];
+			g_attr_names.push(attr_name);
+			comet_req(attr_name, proxy_url).then(
+				function(data){
+					// console.log("data: ", data);
+					req_cntr++;
+					// console.log(req_cntr);
+					if(req_cntr < num_of_attrs) {
+						data_total += data + ", ";
+						create_data();
+					}
+					else {
+						data_total = "[" + data_total;
+						data_total += data + "]";
+						data_total = data_total.replace(/'/g, '"');
+						// console.log(data_total);
+						// console.log("Total: ", JSON.parse(data_total));
+
+						callback(JSON.parse(data_total));
+					}
+				}
+			);
+		});
+		
+	}
+
+
+
+	async function comet_req(attr_name, proxy_url){
+		var data_temp;
+		return $.ajax({
+			method: 'GET',
+			url: proxy_url + g_entityId + "/" + attr_name,
+			success: function(response){
+				data_temp = JSON.stringify(response);
+				data_temp = data_temp.slice(1, -1);
+				// data_total += data_temp; 
+				// console.log("data_temp: ", data_temp);
+				return data_temp
+			}
+		});
+		
 	}
 
 	function parseSamples(values) {
@@ -169,9 +147,6 @@
 		});
 	}
 
-	// var units = "pm"; // Comment out when not in testing
-	var units = MashupPlatform.prefs.get('units'); // Remove comment when not in testing
-	// console.log("Units: ", units, ", ", typeof units);
 	/**
 	 * draw data. This may be part of a controller code in MVC
 	 */
@@ -192,16 +167,19 @@
 				})
 				.rotateLabels(45);
 
-			if(units == "pm"){
-				chart.yAxis
-					.tickFormat(d3.format(',.2f'))
-					.axisLabel('PM(ug/m^3)');
-			}
-			else{
-				chart.yAxis
+			// if(units == "pm"){
+			// 	chart.yAxis
+			// 		.tickFormat(d3.format(',.2f'))
+			// 		.axisLabel('PM(ug/m^3)');
+			// }
+			// else{
+			// 	chart.yAxis
+			// 	.tickFormat(d3.format(',.2f'))
+			// 	.axisLabel('RH(%)/Temperatue(C)');
+			// }
+			chart.yAxis
 				.tickFormat(d3.format(',.2f'))
-				.axisLabel('RH(%)/Temperatue(C)');
-			}
+				.axisLabel('Units');
 			
 			chart.y2Axis
             	.tickFormat(() => "");
@@ -231,56 +209,18 @@
 
 		return loadData(function(data) {
 			var values = [], attrName = [];
-			if (units == "pm"){
-				
-				values[2] = data[0].value;
-				// attrName[2] = data[data.length - 3].contextResponses[0].contextElement.attributes[0].name;
-				attrName[2] = "PM1";
-				values[3] = data[1].value;
-				// attrName[3] = data[data.length - 4].contextResponses[0].contextElement.attributes[0].name;
-				attrName[3] = "PM2.5";
-				values[4] = data[2].value;
-				// attrName[4] = data[data.length - 5].contextResponses[0].contextElement.attributes[0].name;
-				attrName[4] = "PM10";
-
-				var samples = [
-					{
-						key: attrName[2],
-						values: parseSamples(values[2])
-					},
-					{
-						key: attrName[3],
-						values: parseSamples(values[3])
-					},
-					{
-						key: attrName[4],
-						values: parseSamples(values[4])
-					}
-				];
-				
-				loadGraph(samples);
+			var samples = [];
+			for(var i=0;i<data.length;i++){
+				// values[i] = data[i].value;
+				// attrName[i] = g_attr_names[i];
+				samples[i] = {
+								key: g_attr_names[i],
+								values: parseSamples(data[i].value)
+							};
 			}
-			else{
-				values[0] = data[3].value;
-				// attrName[0] = data[data.length - 1].contextResponses[0].contextElement.attributes[0].name;
-				attrName[0]= "RH";
-				values[1] = data[4].value;
-				// attrName[1] = data[data.length - 2].contextResponses[0].contextElement.attributes[0].name;
-				attrName[1] = "Temperature";
 
-				var samples = [
-					{
-						key: attrName[0],
-						values: parseSamples(values[0])
-					},
-					{
-						key: attrName[1],
-						values: parseSamples(values[1])
-					}
-				];
-					
-				loadGraph(samples);
-			}
+			loadGraph(samples);
+			
 		});
 	}
 

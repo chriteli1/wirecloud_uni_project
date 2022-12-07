@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-graph-general" version="3.4">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-graph-general" version="4.0">
     <details>
         <title>Graph for Comet data</title>
         <email>christelioglanidis@outlook.com</email>
@@ -16,10 +16,10 @@
     </details>
 
     <preferences>
-        <preference name="units" type="list" label="Units" description="Choose what units you want to plot" default="pm">
+        <!-- <preference name="units" type="list" label="Units" description="Choose what units you want to plot" default="pm">
             <option value="pm" label="PM1, PM2.5, PM10"/>
             <option value="rh_t" label="RH and Temperature"/>
-        </preference>
+        </preference> -->
         <preference name="proxy_url" type="text" label="Proxy URL" description="URL of the proxy server that is responsible for data retrieval" default="http://localhost:5000"/>
     </preferences>
     

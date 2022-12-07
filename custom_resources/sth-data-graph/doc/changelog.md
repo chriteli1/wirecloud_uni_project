@@ -1,3 +1,8 @@
+## v4.0
+
+- Widget now has a universal intefrace. The number and names of attributes doesn't matter. 
+
+
 ## v3.4
 
 - Add proxy server url preference (it was hardcoded inside widget script).
