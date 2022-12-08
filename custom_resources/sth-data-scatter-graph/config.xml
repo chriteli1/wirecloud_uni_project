@@ -1,5 +1,5 @@
 <?xml version='1.0' encoding='UTF-8'?>
-<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-scatter-graph" version="2.0">
+<widget xmlns="http://wirecloud.conwet.fi.upm.es/ns/macdescription/1" vendor="Telis" name="sth-scatter-graph" version="3.0">
     <details>
         <title>Scatter plot for Comet data</title>
         <email>christelioglanidis@outlook.com</email>
@@ -26,6 +26,8 @@
             <option value="hour" label="Hour"/>
             <option value="day" label="Day"/>
         </preference>
+        <preference name="y_measurements" type="text" label="Measurements for y axis" description="Write the attributes you want to plot on y axis. Divide them with a comma(,) if more than one."/>
+        <preference name="x_measurement" type="text" label="Measurement for x axis" description="Write the attribute you want to plot on x axis. It has to be one attribute only"/>
         <preference name="proxy_url" type="text" label="Proxy URL" description="URL of the proxy server that is responsible for data retrieval" default="http://localhost:5000"/>
     </preferences>
     

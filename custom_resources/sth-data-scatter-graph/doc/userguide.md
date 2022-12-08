@@ -4,6 +4,10 @@ This is a widget for scatter plotting STH Comet data for PM1, PM2.5 and PM10 in 
 
 # Settings
 
+- **Aggregation method**: Choose to fetch the max, min or average value.
+- **Aggregation period**: Choose to fetch data per minute, hour or day.
+- **Measurements for y axis**: Write the attributes you want to plot on y axis. If more than one, divide them only with a comma(,).
+- **Measurement for x axis**: Write the attribute you want to plot on x axis. It has to be only one.
 - **Proxy URL**: Enter the URL of the proxy server responsible for fetching data from Comet. 
 
 # Wiring

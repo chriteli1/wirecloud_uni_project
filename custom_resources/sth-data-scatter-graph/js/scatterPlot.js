@@ -1,26 +1,47 @@
 (function(){
 	
 	var g_entityId;//global entity id
-	var refresh_flag = false;
+	// var refresh_flag = false;
 	// console.log("Start");
 	// document.getElementById("refresh").addEventListener("click", function(){refresh_flag = true;});
 	
+
+	
+
 	var title = document.getElementById("entityId"); // This is needed to check if widget is visible atm
 
 
 	/*===For testing only, comment out when not in testing===*/
-	// var graph_input = {id : "Room2"};
-	// window.onload = (event) => {
-	// 	handlerEntityIdInput(graph_input);
-	//   };
+	var graph_input = {id : "Room2"};
+	window.onload = (event) => {
+		handlerEntityIdInput(graph_input);
+	  };
 	/*=======================================================*/
 	
+
+
+	/*=============== Testing ==================*/
+	// const xAxisMeasurement = "rh"; //For testing only
+	// const yAxisMeasurement = "pm1,temp,pm2_5"; //For testing only
 	// var aggr_method = "sum"; //For testing only
 	// var aggr_period = "hour"; //For testing only
-	// var proxy_url = "http://localhost:5000" //For testing only
+	// var proxy_url = "http://65.109.137.229:5000/" //For testing only
+	/* ======================================== */
+
+	/*=================================== Wirecloud =================================*/
 	var aggr_method = MashupPlatform.prefs.get('aggr_method'); //Comment out when testing outside wirecloud
 	var aggr_period = MashupPlatform.prefs.get('aggr_period'); //Comment out when testing outside wirecloud
 	var proxy_url = MashupPlatform.prefs.get('proxy_url'); //Comment out when testing outside wirecloud
+	var xAxisMeasurement = MashupPlatform.prefs.get('x_measurement'); //Comment out when testing outside wirecloud
+	var yAxisMeasurement = MashupPlatform.prefs.get('y_measurements').split(","); //Comment out when testing outside wirecloud
+	/*===============================================================================*/
+
+
+
+	var xAxisIndex = 0; 
+	var yAxisIndex = []; 
+	
+	
 
 
 	//Find the id of the selected entity
@@ -29,27 +50,15 @@
 		//console.log("Title hidden: ", $(title).is(":hidden"));
 		
 		if (graph_input != null && graph_input.id != null && !$(title).is(":hidden")){
-			// console.log("not hidden");
 			
-			
-			// if(!$(title).is(":hidden") && refresh_flag){
-			// 	refresh_flag = false;
-			// 	var entityId = graph_input.id;
-			// 	g_entityId = entityId;
-			// 	document.getElementById("entityId").innerHTML = entityId;
-			// 	init();
-			// }
-			// else{
-				if(graph_input.id != g_entityId){
-					var entityId = graph_input.id;
-					g_entityId = entityId;
-					document.getElementById("entityId").innerHTML = entityId;
-					init();
-				}
-			// }
-			
-			
-			
+			if(graph_input.id != g_entityId){
+				var entityId = graph_input.id;
+				g_entityId = entityId;
+				document.getElementById("entityId").innerHTML = entityId;
+				console.log("OK");
+				init();
+			}		
+		
 		}
 		
 	};
@@ -58,111 +67,80 @@
 	MashupPlatform.wiring.registerCallback("POIselected", handlerEntityIdInput); 
 	
 
+	var g_attr_names = []; //Global attributes' names
 	function loadData(callback) {
 
-		// console.log("ID:", g_entityId);
-		var loadLocalData = false,     //change this if you want to perform a request to a real instance of sth-comet
-		//change the urlParams and headers if you want to query your own entity data.
-			urlParams = {
-				dateFrom: '2015-11-26T00:00:00.000Z',
-				dateTo: '2015-11-26T23:00:00.000Z',
-				lastN: 2000
-			},
-			headers = {
-				//'Fiware-Service': 'something',
-				//'Fiware-ServicePath': '/'
-				//'X-Auth-Token': 'XXXXXXX'
-			};
-
-		if (loadLocalData) {
-			return callback(rawTemperatureSamples); //return samples from samples.js
-		} else {
-			var data1, data2, data3, data4, data5 = "";
-
-			var data = "";
-			var req1 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + "/" + g_entityId + "/pm1/" + aggr_method + "/" + aggr_period,
-				success: function(response) {
-					data1 = JSON.stringify(response);
-					data1 = data1.slice(1, -1);
-					data1 = "[" + data1 + ", ";
-					// data = data1;
-				}
-			});
-			var req2 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/pm2_5/" + aggr_method + "/" + aggr_period,
-				success: function(response) {
-					data2 =  JSON.stringify(response);
-					data2 = data2.slice(1, -1);
-					data2 = data2 + ", ";
-					// data += data1;
-				}
-			});
-			var req3 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/pm10/" + aggr_method + "/" + aggr_period,
-				success: function(response) {
-					data3 =  JSON.stringify(response);
-					data3 = data3.slice(1, -1);
-					data3 = data3 + ", ";
-					// data += data1;
-				}
-			});
-			var req4 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/rh/" + aggr_method + "/" + aggr_period,
-				success: function(response) {
-					data4 =  JSON.stringify(response);
-					data4 = data4.slice(1, -1);
-					data4 = data4 + ", ";
-					// data += data1;
-				}
-			});
-			var req5 = $.ajax({
-				method: 'GET',
-				// dataType: "string",
-				url: proxy_url + g_entityId + "/temp/" + aggr_method + "/" + aggr_period,
-				success: function(response) {
-					data5 =  JSON.stringify(response);
-					data5 = data5.slice(1, -1);
-					data5 = data5 + "]";
-					// data += data1;
-				}
-			});
-			$.when(req1, req2, req3, req4, req5).done(function(){
-				data = data1 + data2 + data3 + data4 + data5;
-				data = data.replace(/'/g, '"');
-				json_data = JSON.parse(data);
-				// console.log(json_data);
+		
+		var data_total = "";
+		// var data_temp = "";
+		var num_of_attrs = 0;
+		var orion_data;
+		var req_cntr = 1;
+		var orion_req = $.ajax({
+			method: 'GET',
+			url: proxy_url + g_entityId,
+			// headers: headers,
+			success: function(response) {
+				// console.log("orion response: ", response);
+				var data = response.replace(/'/g, "\"");
 				// console.log(data);
-				return callback(json_data);
-			});
-			// return $.ajax({
-			// 	method: 'GET',
-			// 	url: 'http://localhost:5000/' + g_entityId + "/temp",
-			// 	success: function(data) {
-			// 		data = data.replace(/'/g, '"');
-			// 		data = data.replace(/False/g, 'false');
-			// 		json_data = JSON.parse(data); 
-			// 		console.log(json_data);
-			// 		// return callback(json_data);
-			// 	}
-			// });
-		}
+				var data_json = JSON.parse(data);
+				num_of_attrs = Object.keys(data_json).length;
+				
+				orion_data = data_json;
+				// console.log(orion_data); 
+
+			}
+		});
+		var req_cntr = 1;
+		$.when(orion_req).done(function create_data() {
+			// while(req_cntr < num_of_attrs){
+			var attr_name = Object.keys(orion_data)[req_cntr];
+
+			if(yAxisMeasurement.includes(attr_name)) yAxisIndex.push(req_cntr-1);
+			if(xAxisMeasurement == attr_name) xAxisIndex = req_cntr-1;
+
+			g_attr_names.push(attr_name);
+			comet_req(attr_name, proxy_url).then(
+				function(data){
+					// console.log("data: ", data);
+					req_cntr++;
+					// console.log(req_cntr);
+					if(req_cntr < num_of_attrs) {
+						data_total += data + ", ";
+						create_data();
+					}
+					else {
+						data_total = "[" + data_total;
+						data_total += data + "]";
+						data_total = data_total.replace(/'/g, '"');
+						// console.log(data_total);
+						// console.log("Total: ", JSON.parse(data_total));
+
+						callback(JSON.parse(data_total));
+					}
+				}
+			);
+		});
+		
+	}
+	
+	async function comet_req(attr_name, proxy_url){
+		var data_temp;
+		return $.ajax({
+			method: 'GET',
+			url: proxy_url + g_entityId + "/" + attr_name + "/" + aggr_method + "/" + aggr_period,
+			success: function(response){
+				data_temp = JSON.stringify(response);
+				data_temp = data_temp.slice(1, -1);
+				// data_total += data_temp; 
+				// console.log("data_temp: ", data_temp);
+				return data_temp
+			}
+		});
+		
 	}
 
-	// function parseSamples(values1, values2) { 
-	// 		return {
-	// 			x: values1.map(function(point) {return point.attrValue}),
-	// 			y: values2.map(function(point) {return point.attrValue})
-	// 		}
-	// }
 
 	function parseSamples(values1, values2) {
 		return values1.map(function(point, index) {
@@ -206,33 +184,8 @@
 			chart.xAxis.tickFormat(d3.format('.02f'));
         	chart.yAxis.tickFormat(d3.format('.02f'));
 
-			// chart.xAxis
-			// 	//.tickFormat(d3.time.format('%x %X'));
-			// 	.tickFormat(function(d) {
-			// 		return d3.time.format('%d/%m/%Y %X')(new Date(d))
-			// 	})
-			// 	.rotateLabels(45);
-
-			// if(units == "pm"){
-			// 	chart.yAxis
-			// 		.tickFormat(d3.format(',.2f'))
-			// 		.axisLabel('PM(ug/m^3)');
-			// }
-			// else{
-			// 	chart.yAxis
-			// 	.tickFormat(d3.format(',.2f'))
-			// 	.axisLabel('RH(%)/Temperatue(C)');
-			// }
-			
-			// chart.y2Axis
-            // 	.tickFormat(() => "");
-
-        	// chart.x2Axis
-            // 	.tickFormat(() => "");
-
 			//Remove previous tooltip
 			// d3.selectAll(".nvtooltip.xy-tooltip").remove();
-
 
 
 			d3.select('#chart svg')
@@ -290,95 +243,58 @@
 		return slope1/slope2
 	}
 
-	function findIntercept(values){
-		var add_result = 0;
+	function findIntercept(values, slope){
+		var max_y = values[0].y;
+		var min_y = values[0].y;
+		var min_x = values[0].x;
 		values.map(function(points){
-			add_result += points.y;
+			max_y = points.y > max_y ? points.y : max_y;
+			min_y = points.y < min_y ? points.y : min_y;
+			min_x = points.x < min_x ? points.x : min_x;
 		});
-		var intercept = add_result/values.length;
+		var extra_y =  slope*min_x;
+		var intercept = (max_y+min_y)/2 - extra_y;
 		return intercept
 	}
 
 	function init() {
 
 		return loadData(function(data) {
-			// var values = [], attrName = [];
-
-			// values[0] = data[0].value;
-			// attrName[0] = "PM1";
-
-			// values[1] = data[1].value;
-			// attrName[1] = "PM2.5";
-
-			// values[2] = data[2].value;
-			// attrName[2] = "PM10";
-
-			// values[3] = data[3].value;
-			// console.log("RH: ", values[3]);
+			
 			var values = [];
 			var samples_values_total = [];
-			attrName = ["PM1", "PM2.5", "PM10", "RH", "Temperature"];
+			var samples = [];
+			// attrName = ["PM1", "PM2.5", "PM10", "RH", "Temperature"];
 			for (let i=0; i < data.length; i++){
 				for(let j=0; j < data[i].value.length; j++){
 					values = j > 0 ? values.concat(data[i].value[j].points) : data[i].value[j].points;		
 				}
 
 				samples_values_total[i] = values;
-				// console.log(samples_values_total);
+				console.log(samples_values_total);
+
+				
 			}
+			console.log("Y axis: ", yAxisIndex);
+			console.log("Y axis: ", xAxisIndex);
+			for (let i=0; i < data.length; i++){
+				if (yAxisIndex.includes(i)){
+					samples[i] =
+							{	
+								key: g_attr_names[i],
+								values: parseSamples(samples_values_total[i], samples_values_total[xAxisIndex]),
+							};
+					samples[i].slope = findSlope(samples[i].values); 
 
-			var samples = [
-				{
-					key: attrName[0],
-					values: parseSamples(samples_values_total[0], samples_values_total[3]),
-					slope: Math.random() - .01,
-					intercept: 2
-				},
-				{
-					key: attrName[1],
-					values: parseSamples(samples_values_total[1], samples_values_total[3]),
-					slope: Math.random() - .01,
-					intercept: 4
-				},
-				{
-					key: attrName[2],
-					values: parseSamples(samples_values_total[2], samples_values_total[3]),
-					slope: Math.random() - .01,
-					intercept: 8
+					samples[i].intercept = findIntercept(samples[i].values, samples[i].slope); 
 				}
-			];
-			// console.log("Samples: ", samples);
-			samples[0].slope = findSlope(samples[0].values); 
-			samples[1].slope = findSlope(samples[1].values); 
-			samples[2].slope = findSlope(samples[2].values); 
+			}
+			samples = $.grep(samples, n => n == 0 || n);
+			console.log("Samples: ", samples);
 
-			samples[0].intercept = findIntercept(samples[0].values); 
-			samples[1].intercept = findIntercept(samples[1].values); 
-			samples[2].intercept = findIntercept(samples[2].values); 
-			// console.log("Samples: ", samples);
+			
 			loadGraph(samples);
 		
-			// else{
-			// 	values[0] = data[3].value;
-			// 	// attrName[0] = data[data.length - 1].contextResponses[0].contextElement.attributes[0].name;
-			// 	attrName[0]= "RH";
-			// 	values[1] = data[4].value;
-			// 	// attrName[1] = data[data.length - 2].contextResponses[0].contextElement.attributes[0].name;
-			// 	attrName[1] = "Temperature";
-
-			// 	var samples = [
-			// 		{
-			// 			key: attrName[0],
-			// 			values: parseSamples(values[0])
-			// 		},
-			// 		{
-			// 			key: attrName[1],
-			// 			values: parseSamples(values[1])
-			// 		}
-			// 	];
-				
-			// 	loadGraph(samples);
-			// }
 		});
 	}
 

@@ -1,3 +1,7 @@
+## v3.0
+
+- Universal attributes interface.
+
 ## v2.0
 
 - Widget now requests aggregated data from Comet to have a bigger time window of data.
