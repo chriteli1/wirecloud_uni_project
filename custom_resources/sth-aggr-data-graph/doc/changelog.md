@@ -1,3 +1,7 @@
+## v3.1
+
+- Add a label to the focus line to help the user understand what it does.
+
 ## v3.0
 
 - Universal interface for attributes.

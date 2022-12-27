@@ -11,7 +11,7 @@
 	
 	// var aggr_method = "sum"; //For testing only
 	// var aggr_period = "hour"; //For testing only
-	// var proxy_url = "http://localhost:5000" //For testing only
+	// var proxy_url = "http://65.109.137.229:5000/" //For testing only
 	var aggr_method = MashupPlatform.prefs.get('aggr_method'); //Comment out when testing outside wirecloud
 	var aggr_period = MashupPlatform.prefs.get('aggr_period'); //Comment out when testing outside wirecloud
 	var proxy_url = MashupPlatform.prefs.get('proxy_url'); //Comment out when testing outside wirecloud
@@ -171,21 +171,20 @@
 				.tickFormat(function(d) {
 					return d3.time.format('%d/%m/%Y %X')(new Date(d))
 				})
-				.rotateLabels(45);
-
+				.rotateLabels(45)
+				.axisLabel('↓ Focus/Zoom ↓');
 			
 				
 			chart.yAxis
 			.tickFormat(d3.format(',.2f'))
 			.axisLabel('Units');
 			
-			
 			chart.y2Axis
             	.tickFormat(() => "");
-
         	chart.x2Axis
             	.tickFormat(() => "");
 
+			
 			//Remove previous tooltip
 			d3.selectAll(".nvtooltip.xy-tooltip").remove();
 
