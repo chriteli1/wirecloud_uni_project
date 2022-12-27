@@ -11,16 +11,13 @@
 	var title = document.getElementById("entityId"); // This is needed to check if widget is visible atm
 
 
-	/*===For testing only, comment out when not in testing===*/
-	var graph_input = {id : "Room2"};
-	window.onload = (event) => {
-		handlerEntityIdInput(graph_input);
-	  };
-	/*=======================================================*/
-	
 
 
 	/*=============== Testing ==================*/
+	// var graph_input = {id : "Room2"};
+	// window.onload = (event) => {
+	// 	handlerEntityIdInput(graph_input);
+	//   };
 	// const xAxisMeasurement = "rh"; //For testing only
 	// const yAxisMeasurement = "pm1,temp,pm2_5"; //For testing only
 	// var aggr_method = "sum"; //For testing only
@@ -49,16 +46,22 @@
 		// console.log("Hidden: ", document.visibilityState);
 		//console.log("Title hidden: ", $(title).is(":hidden"));
 		
-		if (graph_input != null && graph_input.id != null && !$(title).is(":hidden")){
+		if (graph_input != null && graph_input.id != null && graph_input.id != g_entityId){
 			
-			if(graph_input.id != g_entityId){
+			// if(!$(title).is(":hidden")){
 				var entityId = graph_input.id;
 				g_entityId = entityId;
 				document.getElementById("entityId").innerHTML = entityId;
-				console.log("OK");
+				// console.log("OK1");
 				init();
-			}		
-		
+			// }
+			// else if (graph_input.id != g_entityId){
+			// 	var entityId = graph_input.id;
+			// 	g_entityId = entityId;
+			// 	document.getElementById("entityId").innerHTML = entityId;
+			// 	console.log("OK2");
+			// 	init();
+			// }		
 		}
 		
 	};
@@ -70,7 +73,7 @@
 	var g_attr_names = []; //Global attributes' names
 	function loadData(callback) {
 
-		
+		// console.log("test2");
 		var data_total = "";
 		// var data_temp = "";
 		var num_of_attrs = 0;
@@ -181,7 +184,10 @@
 			});
 
 
-			chart.xAxis.tickFormat(d3.format('.02f'));
+			chart.xAxis
+				.axisLabel(xAxisMeasurement)
+				.tickFormat(d3.format('.02f'));
+
         	chart.yAxis.tickFormat(d3.format('.02f'));
 
 			//Remove previous tooltip
@@ -258,7 +264,7 @@
 	}
 
 	function init() {
-
+		// console.log("test1");
 		return loadData(function(data) {
 			
 			var values = [];
@@ -271,12 +277,12 @@
 				}
 
 				samples_values_total[i] = values;
-				console.log(samples_values_total);
+				// console.log(samples_values_total);
 
 				
 			}
-			console.log("Y axis: ", yAxisIndex);
-			console.log("Y axis: ", xAxisIndex);
+			// console.log("Y axis: ", yAxisIndex);
+			// console.log("Y axis: ", xAxisIndex);
 			for (let i=0; i < data.length; i++){
 				if (yAxisIndex.includes(i)){
 					samples[i] =
@@ -290,7 +296,7 @@
 				}
 			}
 			samples = $.grep(samples, n => n == 0 || n);
-			console.log("Samples: ", samples);
+			// console.log("Samples: ", samples);
 
 			
 			loadGraph(samples);

@@ -1,3 +1,7 @@
+## v3.2
+
+- Add x axis label.
+
 ## v3.0
 
 - Universal attributes interface.
