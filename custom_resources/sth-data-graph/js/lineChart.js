@@ -165,7 +165,8 @@
 				.tickFormat(function(d) {
 					return d3.time.format('%d/%m/%Y %X')(new Date(d))
 				})
-				.rotateLabels(45);
+				.rotateLabels(45)
+				.axisLabel('↓ Focus/Zoom ↓');
 
 			// if(units == "pm"){
 			// 	chart.yAxis

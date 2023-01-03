@@ -1,3 +1,7 @@
+## v4.1
+
+- Add a label to the focus line to help the user understand what it does.
+
 ## v4.0
 
 - Widget now has a universal intefrace. The number and names of attributes doesn't matter. 
