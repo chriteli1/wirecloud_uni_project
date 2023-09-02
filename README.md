@@ -1,10 +1,10 @@
-# wirecloud_uni_project
-**This is a repo for my university thesis on IoT data visualization using FIWARE's Wirecloud.**
+# Web application for visualizing data from IoT systems
+**This is a repo for a web application that helps with IoT data visualization using FIWARE's Wirecloud (part of my university thesis).**
 
-Wirecloud is a Django web application that lets the user create dashboards with virtually no coding. It relies on APIs that FIWARE has developed.
+Wirecloud is a Django web application that lets the user create dashboards with virtually no coding.
 
-- For the needs of the project I created some Wirecloud widgets to help with the visualization of data from an IoT system. 
-- These widgets use an intermediate server to receive data from the APIs, so a Python sript was created to open a Flask server that helps with that.
+- For this project I created some Wirecloud widgets to help with the visualization of data from an IoT system. 
+- These widgets need an intermediate server to receive data from the APIs that Wirecloud relies on for data feed, so a Python sript was created to open a Flask server that helps with that.
 - There was no infrastructure for the collection of data, so I created an additional Python script to send data to be visualized.
 
 Web app preview:
