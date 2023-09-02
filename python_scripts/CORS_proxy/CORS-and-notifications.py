@@ -15,6 +15,8 @@ CORS(app)
 post_flag = False
 alerts = []
 alerts_index = 1
+
+# ==========Handle inoming noifications from Orion========
 @app.route('/notifications', methods=['POST', 'GET'])
 def receive_notification():
     global alerts, alerts_index
@@ -22,7 +24,6 @@ def receive_notification():
         notification = request.json
         # print(notification)
         alerts.extend(notification["data"])
-        # alerts_index += 1
         # print(type(alerts))
         # print(alerts)
         return notification 
@@ -36,17 +37,14 @@ def receive_notification():
         alerts = []
         # alerts_index = 1
         return resp
-    
+# ================================================================
 
+# =========Send data from Comet when requested from a widget=========
 @app.route('/<string:entity_id>/<string:attr>/', methods=['GET'])
 def send_data_to_wirecloud(entity_id, attr):
     lastN = "300"
     url = "http://localhost:8666/STH/v2/entities/" + entity_id + "/attrs/" + attr + "?type=room&lastN=" + lastN
-    # url2 = "http://localhost:8666/STH/v1/contextEntities/type/room/id/" + entity_id + "/attributes/pm10?lastN=300"
-    # url3 = "http://localhost:8666/STH/v1/contextEntities/type/room/id/" + entity_id + "/attributes/pm2_5?lastN=300"
-    # url4 = "http://localhost:8666/STH/v1/contextEntities/type/room/id/" + entity_id + "/attributes/rh?lastN=300"
-    # url5 = "http://localhost:8666/STH/v1/contextEntities/type/room/id/" + entity_id + "/attributes/temp?lastN=300"
-
+    
     payload = {}
     headers = {
     'Content-Type': 'application/json',
@@ -54,21 +52,16 @@ def send_data_to_wirecloud(entity_id, attr):
     'Fiware-Servicepath': '/'
     }
 
-    # response = []
     response = requests.request("GET", url, headers=headers, data=payload)
-    # response2 = requests.request("GET", url2, headers=headers, data=payload)
-    # response3 = requests.request("GET", url3, headers=headers, data=payload)
-    # response4 = requests.request("GET", url4, headers=headers, data=payload)
-    # response5 = requests.request("GET", url5, headers=headers, data=payload)
-    # response.append(response1.text)
-    # response.append(response2.text)
-    # response_total = f"[{response1.text}, {response2.text}, {response3.text}, {response4.text}, {response5.text}]"
-    
+        
     #print(response1.text)
     output = json.loads(response.text)
     #print(output)
     return str(output)
 
+# ====================================================================
+
+# ===========Send aggregated data from Comet when requested from a widget========
 @app.route('/<string:entity_id>/<string:attr>/<string:method>/<string:period>', methods=['GET'])
 def send_aggr_data_to_wirecloud(entity_id, attr, method, period):
 
@@ -90,6 +83,8 @@ def send_aggr_data_to_wirecloud(entity_id, attr, method, period):
     response = requests.request("GET", url, headers=headers, data=payload)
     output = json.loads(response.text)
     return str(output)
+
+# ================================================================================
 
 if __name__ == '__main__':
     app.run(host='0.0.0.0', debug=True)
